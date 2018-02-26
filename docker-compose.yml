@@ -1,0 +1,46 @@
+version: '3'
+services:
+  nats_a:
+    hostname: nats_a
+    image: nats-streaming:latest
+    volumes:
+      - ./conf/nats/a:/tmp/
+    ports:
+      - 7244:7244
+    tty: true
+  pub_1:
+    hostname: pub_1
+    build: pub_1
+    working_dir: '/go/src/web'
+    volumes:
+      - ./pub_1:/go/src/web
+    links:
+      - nats_a
+    tty: true
+  pub_2:
+    hostname: pub_2
+    build: pub_2
+    working_dir: '/go/src/web'
+    volumes:
+      - ./partner:/go/src/web
+    links:
+      - nats_a
+    tty: true
+  sub_1:
+    hostname: sub_1
+    build: sub_1
+    working_dir: '/go/src/web'
+    volumes:
+      - ./sub_1:/go/src/web
+    links:
+      - nats_a
+    tty: true
+  sub_2:
+    hostname: sub_2
+    build: sub_2
+    working_dir: '/go/src/web'
+    volumes:
+      - ./sub_2:/go/src/web
+    links:
+      - nats_a
+    tty: true
